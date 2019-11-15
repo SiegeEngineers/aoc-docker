@@ -9,14 +9,13 @@ Run Age of Empires II (WK) headlessly in docker.
 ## Run
 
 Prerequisites:
-- Set up a directory to drop recorded games (`$(pwd)/dropbox`) in the example.
+- Set up a directory to drop recorded games (`$(pwd)/dropbox` in the example).
 - Have a copy of Age of Empires II available on the docker host.
 
 ```
 docker run \
-  --privileged \
   --name aoc \
-  --mount type=bind,source="$(pwd)"/dropbox,target=/dropbox \
+  --mount type=bind,source="$(pwd)/dropbox",target=/dropbox \
   --mount type=bind,source="$(pwd)/Age of Empires II",target=/aoc \
   siegeengineers/aoc-headless:1.0
 ```
