@@ -15,6 +15,9 @@ if [ -n $VNC_PASSWORD ]; then
     x11vnc -display :0 -noxrecord -noxfixes -noxdamage -forever -passwd $VNC_PASSWORD > $HOME/xvnc.log 2>&1 &
 fi
 
+# clear out dropbox
+rm -f /dropbox/*
+
 # wait for recorded game files to appear in the dropbox
 log "aoc version $(cat "$WKPATH/version.ini")"
 log "waiting for files ..."
@@ -39,7 +42,7 @@ inotifywait -q -m /dropbox -e create -e moved_to |
             grep -q -I SPI_SETSHOWIMEUI $HOME/aoc.log
             if [ $? -eq 0 ]; then break; fi
         done
-	sleep 1
+	sleep 2
 
 	log "$file playback started"
 	# run specified additional commands

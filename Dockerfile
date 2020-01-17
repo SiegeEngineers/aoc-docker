@@ -4,7 +4,7 @@ RUN dpkg --add-architecture i386
 
 RUN apt-get update -y
 
-RUN apt-get install -y --no-install-recommends winetricks xvfb openssh-server inotify-tools x11vnc ca-certificates cabextract
+RUN apt-get install -y --no-install-recommends winetricks xvfb openssh-server inotify-tools x11vnc ca-certificates cabextract net-tools
 
 RUN apt-get install -y --install-recommends wine-stable wine32
 
