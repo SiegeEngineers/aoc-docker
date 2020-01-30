@@ -30,11 +30,11 @@ inotifywait -q -m /dropbox -e create -e moved_to |
         if [ -n "$PID" ]; then kill $PID; fi
 	rm -f $HOME/aoc.log
 
-	# copy incoming file
-        mv "/dropbox/$file" "$WKPATH/SaveGame/headless.mgz"
+	# move incoming file
+        mv "/dropbox/$file" "$WKPATH/SaveGame/$HOSTNAME.mgz"
 
 	# launch aoc
-        WINEDEBUG=+loaddll wine "$AOCPATH/age2_x1/WK.exe" '"headless.mgz"' NOSOUND NODXCHECK > $HOME/aoc.log 2>&1 &
+        WINEDEBUG=+loaddll wine "$AOCPATH/age2_x1/WK.exe" '"'$HOSTNAME.mgz'"' NOSOUND NODXCHECK > $HOME/aoc.log 2>&1 &
         PID=$!
 
 	# wait for rec to load
