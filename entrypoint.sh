@@ -1,7 +1,7 @@
 #!/bin/bash
 
 log () {
-  echo "[$(date +"%x %X")] $1"
+    echo "[$(date +"%x %X")] $1"
 }
 
 # for reasons unknown, this command can not be run in the build (this just accepts the EULA)
@@ -24,27 +24,35 @@ log "waiting for files ..."
 
 inotifywait -q -m /dropbox -e create -e moved_to |
     while read path action file; do
-	log "$file received"
+        log "$file received"
 
-	# kill aoc if it's already running
+        # kill aoc if it's already running
         if [ -n "$PID" ]; then kill $PID; fi
-	rm -f $HOME/aoc.log
+        rm -f $HOME/aoc.log
 
-	# move incoming file
+        # move incoming file
         mv "/dropbox/$file" "$WKPATH/SaveGame/$HOSTNAME.mgz"
 
-	# launch aoc
+        # launch aoc
         WINEDEBUG=+loaddll wine "$AOCPATH/age2_x1/WK.exe" '"'$HOSTNAME.mgz'"' NOSOUND NODXCHECK > $HOME/aoc.log 2>&1 &
         PID=$!
 
-	# wait for rec to load
-        while true; do
+        # wait for rec to load
+        SECONDS=0
+        SUCCESS=0
+        while [ $SECONDS -le 5 ]; do
             grep -q -I SPI_SETSHOWIMEUI $HOME/aoc.log
-            if [ $? -eq 0 ]; then break; fi
+            if [ $? -eq 0 ]; then SUCCESS=1; break; fi
+            sleep 1
+            ((SECONDS++))
         done
-	sleep 2
 
-	log "$file playback started"
-	# run specified additional commands
-	eval "$@"
+        if [ $SUCCESS -eq 1 ]; then
+            sleep 2
+            log "$file playback started"
+            # run specified additional commands
+            eval "$@"
+        else
+            log "$file failed to play"
+        fi
     done
