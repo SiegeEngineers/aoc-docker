@@ -30,6 +30,10 @@ inotifywait -q -m /dropbox -e create -e moved_to |
         if [ -n "$PID" ]; then kill $PID; fi
         rm -f $HOME/aoc.log
 
+        # kill debug/console (remnant of crash)
+        ps -ef | grep 'winedbg' | grep -v grep | awk '{print $2}' | xargs -r kill -9
+        ps -ef | grep 'wineconsole' | grep -v grep | awk '{print $2}' | xargs -r kill -9
+
         # move incoming file
         mv "/dropbox/$file" "$WKPATH/SaveGame/$HOSTNAME.mgz"
 
